@@ -1,0 +1,60 @@
+<html><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+	<title>パペット</title>
+	<style>
+		body{
+			margin: 0;
+			overflow: hidden;
+		}
+	</style>
+</head><body>
+	<div>
+		<div>svg</div>
+		<svg id="svgRoot">
+			<rect id="svgRect" x="0" y="0" fill="#ff0000" />
+			<g id="partsList"></g>
+		</svg>
+		<div id="frameRate"></div>
+	</div>
+	<script src="./ball.js"></script>
+	<script type="text/javascript">
+"use strict";
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+
+// 処理はここから始まる
+document.addEventListener("DOMContentLoaded", e => {
+	const w = 300;
+	const h = 300;
+	const elemSvgRoot = document.getElementById("svgRoot");
+	const elemSvgRect = document.getElementById("svgRect");
+	const elemPartsList = document.getElementById("partsList");
+	const elemFrameRate = document.getElementById("frameRate");
+	elemSvgRoot.setAttribute("viewbox", `0 0 ${w} ${h}`);
+	elemSvgRoot.setAttribute("width", w);
+	elemSvgRoot.setAttribute("height", h);
+	elemSvgRect.setAttribute("width", w);
+	elemSvgRect.setAttribute("height", h);
+	(update => update(update))(update => {
+		window.bombBall.update(w, h);
+		elemFrameRate.innerHTML = window.bombBall.getFrameRate();
+		const partsList = window.bombBall.getBallList();
+		for(let i = 0; i < partsList.length; i++){
+			const element = elemPartsList.children[i] || elemPartsList.appendChild(document.createElementNS("http://www.w3.org/2000/svg", "circle"));
+			element.setAttribute("cx", partsList[i].x);
+			element.setAttribute("cy", partsList[i].y);
+			element.setAttribute("r", partsList[i].r);
+			element.setAttribute("fill", partsList[i].c);
+		}
+		requestAnimationFrame(() => update(update));
+	});
+});
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+	</script>
+</body></html>

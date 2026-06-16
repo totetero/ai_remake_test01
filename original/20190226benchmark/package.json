@@ -1,0 +1,22 @@
+{
+	"name": "presentation",
+	"version": "0.0.1",
+	"scripts": {
+		"start": "npm run build_ctrl && npm run build_view && npm run build_ball && npm run serve",
+		"build_test": "tsc --module commonjs --target es6 --jsx react src/MainTest.ts --outDir out && browserify out/MainTest.js -o public/test.js",
+		"build_ctrl": "tsc --module commonjs --target es6 --jsx react src/MainCtrl.ts --outDir out && browserify out/MainCtrl.js -o public/ctrl.js",
+		"build_view": "tsc --module commonjs --target es6 --jsx react src/MainView.ts --outDir out && browserify out/MainView.js -o public/view.js",
+		"build_ball": "tsc --module commonjs --target es6 src/MainBall.ts --outDir out && browserify out/MainBall.js -o public/ball.js",
+		"serve": "cd public ; http-server -c-1"
+	},
+	"dependencies": {
+		"react": "16.8.1",
+		"react-dom": "16.8.1",
+		"gl-matrix": "3.0.0",
+		"typescript": "3.3.3",
+		"@types/react": "16.8.2",
+		"@types/react-dom": "16.8.0",
+		"browserify": "16.2.3",
+		"http-server": "0.11.1"
+	}
+}

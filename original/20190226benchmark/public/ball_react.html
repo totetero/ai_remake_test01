@@ -1,0 +1,77 @@
+<html><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+	<title>パペット</title>
+	<style>
+		body{
+			margin: 0;
+			overflow: hidden;
+		}
+	</style>
+</head><body>
+	<div id="app"></div>
+	<script src="https://unpkg.com/react@16.8.1/umd/react.development.js"></script>
+	<script src="https://unpkg.com/react-dom@16.8.1/umd/react-dom.development.js"></script>
+	<script src="https://unpkg.com/@babel/standalone@7.3.2/babel.js"></script>
+	<script src="./ball.js"></script>
+	<script type="text/babel">
+"use strict";
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+
+// コンポーネント
+class ComponentPuppet extends React.Component{
+	constructor(props) {
+		super(props);
+		this.state = {
+			frameRate: 0,
+			partsList: [{x: 0, y: 0, z: 0, r: 0, c: "#ffffff", k: "",},],
+		};
+	}
+	componentDidMount(){
+		(update => update(update))(update => {
+			window.bombBall.update(this.props.w, this.props.h);
+			this.setState({
+				frameRate: window.bombBall.getFrameRate(),
+				partsList: window.bombBall.getBallList(),
+			});
+			requestAnimationFrame(() => update(update));
+		});
+	}
+	render(){
+		return (
+			<div>
+				<div>react.js</div>
+				<svg viewBox={`0 0 ${this.props.w} ${this.props.h}`} width={this.props.w} height={this.props.h}>
+					<rect x="0" y="0" width={this.props.w} height={this.props.h} fill="#ff0000" />
+					{this.state.partsList.map((parts, index) => (
+						<circle
+							key={parts.k}
+							cx={parts.x}
+							cy={parts.y}
+							r={parts.r}
+							fill={parts.c}
+						/>
+					))}
+				</svg>
+				<div>{this.state.frameRate}</div>
+			</div>
+		);
+	}
+}
+
+// 処理はここから始まる
+document.addEventListener("DOMContentLoaded", e => {
+	ReactDOM.render(<ComponentPuppet w={300} h={300} />, document.getElementById("app"));
+});
+
+// バベルコンパイル後にDOMContentLoadedを無理やり呼び出す
+if(document.readyState !== "loading"){document.dispatchEvent(new Event("DOMContentLoaded"));}
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+	</script>
+</body></html>

@@ -1,0 +1,50 @@
+<html><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+	<title>パペット</title>
+	<style>
+		body{
+			margin: 0;
+			overflow: hidden;
+		}
+	</style>
+</head><body>
+	<div>
+		<div>canvas</div>
+		<canvas id="screen" width="300" height="300"></canvas>
+		<div id="frameRate"></div>
+	</div>
+	<script src="./ball.js"></script>
+	<script type="text/javascript">
+"use strict";
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+
+// 処理はここから始まる
+document.addEventListener("DOMContentLoaded", e => {
+	const elemFrameRate = document.getElementById("frameRate");
+	const canvas = document.getElementById("screen");
+	const context = canvas.getContext("2d");
+	(update => update(update))(update => {
+		window.bombBall.update(canvas.width, canvas.height);
+		elemFrameRate.innerHTML = window.bombBall.getFrameRate();
+		context.fillStyle = "#ff0000";
+		context.fillRect(0, 0, canvas.width, canvas.height);
+		const ballList = window.bombBall.getBallList();
+		for(let i = 0; i < ballList.length; i++){
+			context.beginPath();
+			context.fillStyle = ballList[i].c;
+			context.arc(ballList[i].x, ballList[i].y, ballList[i].r, 0, Math.PI*2, false);
+			context.fill();
+		}
+		requestAnimationFrame(() => update(update));
+	});
+});
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+	</script>
+</body></html>

@@ -1,0 +1,58 @@
+<html><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+	<title>パペット</title>
+	<style>
+		body{
+			margin: 0;
+			overflow: hidden;
+		}
+	</style>
+</head><body>
+	<app w="{300}" h="{300}" />
+	<script src="https://unpkg.com/riot@3.13.2/riot+compiler.js"></script>
+	<script src="./ball.js"></script>
+	<script type="riot/tag">
+		<app>
+			<div>riot.js</div>
+			<svg riot-viewbox="{viewbox}" riot-width="{opts.w}" riot-height="{opts.h}">
+				<rect x="0" y="0" riot-width="{opts.w}" riot-height="{opts.h}" fill="#ff0000" />
+				<circle
+					each="{parts in partsList}"
+					riot-cx="{parts.x}"
+					riot-cy="{parts.y}"
+					riot-r="{parts.r}"
+					fill="{parts.c}"
+				/>
+			</svg>
+			<div>{frameRate}</div>
+
+			this.frameRate = 0;
+			this.partsList = [{x: 0, y: 0, z: 0, r: 0, c: "#ffffff", k: "",},];
+			this.viewbox = `0 0 ${opts.w} ${opts.h}`;
+			(update => update(update))(update => {
+				window.bombBall.update(opts.w, opts.h);
+				this.frameRate = window.bombBall.getFrameRate();
+				this.partsList = window.bombBall.getBallList();
+				this.update();
+				requestAnimationFrame(() => update(update));
+			});
+		</app>
+	</script>
+	<script type="text/javascript">
+"use strict";
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+
+// 処理はここから始まる
+document.addEventListener("DOMContentLoaded", e => {
+	riot.mount("app")
+});
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+	</script>
+</body></html>

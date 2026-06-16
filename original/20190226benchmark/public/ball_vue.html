@@ -1,0 +1,72 @@
+<html><head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+	<title>パペット</title>
+	<style>
+		body{
+			margin: 0;
+			overflow: hidden;
+		}
+	</style>
+</head><body>
+	<div id="app">
+		<component-puppet :w="300" :h="300" />
+	</div>
+	<script src="https://unpkg.com/vue@2.6.2/dist/vue.js"></script>
+	<script src="./ball.js"></script>
+	<script type="text/javascript">
+"use strict";
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+
+// コンポーネント
+Vue.component("component-puppet", {
+	props: ["w", "h"],
+	data: function(){
+		return {
+			frameRate: 0,
+			partsList: [{x: 0, y: 0, z: 0, r: 0, c: "#ffffff", k: "",},],
+		};
+	},
+	computed: {
+		viewbox: function(){return `0 0 ${this.w} ${this.h}`;}
+	},
+	mounted: function(){
+		(update => update(update))(update => {
+			window.bombBall.update(this.w, this.h);
+			this.frameRate = window.bombBall.getFrameRate();
+			this.partsList = window.bombBall.getBallList();
+			requestAnimationFrame(() => update(update));
+		});
+	},
+	template: `
+		<div>
+			<div>vue.js</div>
+			<svg :viewbox="viewbox" :width="w" :height="h">
+				<rect x="0" y="0" :width="w" :height="h" fill="#ff0000" />
+				<circle
+					v-for="(parts, index) in partsList"
+					:key="parts.k"
+					:cx="parts.x"
+					:cy="parts.y"
+					:r="parts.r"
+					:fill="parts.c"
+				/>
+			</svg>
+			<div>{{frameRate}}</div>
+		</div>
+	`,
+});
+
+// 処理はここから始まる
+document.addEventListener("DOMContentLoaded", e => {
+	const app = new Vue({el: "#app",});
+});
+
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// ----------------------------------------------------------------
+	</script>
+</body></html>
